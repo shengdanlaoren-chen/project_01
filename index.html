@@ -45,55 +45,56 @@
     <script>
         $(function() {
 
-            // 防抖
-            var timer = null;
-            // 定义对象
-            var obj = {};
+                // 防抖
+                var timer = null;
+                // 定义对象
+                var obj = {};
 
-            function bround(wd) {
-                timer = setTimeout(function() {
-                    getSuggestList(wd)
-                }, 500)
-            }
-
-            $('#ipt').on('keyup', function() {
-                clearTimeout(timer);
-                var keywords = $(this).val().trim();
-                if (keywords <= 0) {
-                    return $('#suggest-list').empty().hide();
+                function bround(wd) {
+                    timer = setTimeout(function() {
+                        getSuggestList(wd)
+                    }, 500)
                 }
-                if (obj[keywords]) {
-                    return renderSuggestList(obj[keywords])
-                }
-                bround(keywords);
-                console.log(keywords);
-                // getSuggestList(keywords)
-            })
 
-
-            // 封装getSuggestList函数
-            function getSuggestList(kw) {
-                $.ajax({
-                    url: 'https://suggest.taobao.com/sug?q=' + kw,
-                    dataType: 'jsonp',
-                    success: function(res) {
-                        console.log(res);
-                        renderSuggestList(res)
+                $('#ipt').on('keyup', function() {
+                    clearTimeout(timer);
+                    var keywords = $(this).val().trim();
+                    if (keywords <= 0) {
+                        return $('#suggest-list').empty().hide();
                     }
+                    if (obj[keywords]) {
+                        return renderSuggestList(obj[keywords])
+                    }
+                    bround(keywords);
+                    console.log(keywords);
+                    // getSuggestList(keywords)
                 })
-            }
 
 
-            function renderSuggestList(res) {
-                if (res.result.length <= 0) {
-                    return $('#suggest-list').empty().hide();
+                // 封装getSuggestList函数
+                function getSuggestList(kw) {
+                    $.ajax({
+                        url: 'https://suggest.taobao.com/sug?q=' + kw,
+                        dataType: 'jsonp',
+                        success: function(res) {
+                            console.log(res);
+                            renderSuggestList(res)
+                        }
+                    })
                 }
-                var htmlStr = template('tpl-suggestList', res);
-                $('#suggest-list').html(htmlStr).show();
-                var k = $('#ipt').val().trim();
-                obj[k] = res;
-            }
-        })
+
+
+                function renderSuggestList(res) {
+                    if (res.result.length <= 0) {
+                        return $('#suggest-list').empty().hide();
+                    }
+                    var htmlStr = template('tpl-suggestList', res);
+                    $('#suggest-list').html(htmlStr).show();
+                    var k = $('#ipt').val().trim();
+                    obj[k] = res;
+                }
+            })
+            // 修改文件
     </script>
 
 
